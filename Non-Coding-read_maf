@@ -1,0 +1,13 @@
+read_maf2 <- function(file) {
+  df <- read.delim(file, comment.char="#")
+  df <- df[,c(1,9,16)]
+  df2 <- df[df$Variant_Classification %in% c("Intron",
+                                             "IGR"),]
+  df2<-df2 %>% 
+    group_by(Hugo_Symbol) %>% 
+    filter(n() == 1)
+  colnames(df2)[3] <- file
+  df2$Variant_Classification <- NULL
+  df2[2] <-1 
+  return(df2) 
+}  
