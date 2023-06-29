@@ -11,3 +11,12 @@ read_maf2 <- function(file) {
   df2[2] <-1 
   return(df2) 
 }  
+
+final_df2 <- purrr::map_dfr(files, read_maf2)
+
+final_df2[is.na(final_df2)] <- 0
+
+df3 <- final_df2 %>% group_by(Hugo_Symbol) %>% summarise_all(funs(sum))
+
+df3$sum <- rowSums(df3[,2:68])
+strict.df2 <- df3[which(df3$sum >= 2),]
